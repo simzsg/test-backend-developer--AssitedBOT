@@ -1,0 +1,41 @@
+{
+  "name": "test-backend-developer--assitedbot",
+  "version": "1.0.0",
+  "description": "ยินดีต้อนรับสู่การทดสอบทักษะผู้พัฒนา Backend! การทดสอบนี้ถูกออกแบบมาเพื่อประเมินทักษะของคุณในการพัฒนา RESTful API, การเชื่อมต่อ WebSocket, การใช้ FastAPI, Node.js, การจัดการแคชข้อมูล, การออกแบบฐานข้อมูล, และการทำงานร่วมกับ API ภายนอก โปรดทำตามคำแนะนำด้านล่างและส่งงานที่คุณทำเสร็จแล้วตามคำแนะนำ",
+  "homepage": "https://github.com/simzsg/test-backend-developer--AssitedBOT#readme",
+  "bugs": {
+    "url": "https://github.com/simzsg/test-backend-developer--AssitedBOT/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simzsg/test-backend-developer--AssitedBOT.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.17.1",
+    "axios": "^1.12.2",
+    "bcryptjs": "^3.0.2",
+    "bullmq": "^5.61.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "ioredis": "^5.8.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.1",
+    "node-cron": "^4.2.1",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.17.1",
+    "socket.io": "^4.8.1",
+    "ws": "^8.18.3"
+  }
+}

@@ -1,0 +1,176 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    ADMIN
+    MEMBER
+}
+
+model User {
+    id         Int      @id @default(autoincrement())
+    email      String   @unique
+    password   String
+    name       String
+    role       Role     @default(MEMBER)
+    isDisabled Boolean  @default(false)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+enum PriceSource {
+    REST
+    WS
+}
+
+model PriceSnapshot {
+  id        Int      @id @default(autoincrement())
+  symbol    String   @unique
+  price     Decimal  @db.Decimal(20, 8)
+  bid       Decimal? @db.Decimal(20, 8)
+  ask       Decimal? @db.Decimal(20, 8)
+  volume    Decimal? @db.Decimal(28, 8)
+  source    PriceSource
+  eventTime DateTime @default(now())
+  
+}
+
+model CurrentPrice {
+    symbol    String   @id
+    price     Decimal  @db.Decimal(20, 8)
+    bid       Decimal? @db.Decimal(20, 8)
+    ask       Decimal? @db.Decimal(20, 8)
+    volume    Decimal? @db.Decimal(28, 8)
+    eventTime DateTime
+    updatedAt DateTime @updatedAt
+}
+
+
+
+
+
+
+
+//  Database Schema Notes: Monolith
+
+//ข้อดี 
+
+// โค้ด/สคีมาเดียว—ง่ายต่อการพัฒนา/ดีบัก/ดีพลอย
+
+// ทรานแซกชันข้ามโมดูลทำได้ตรง ๆ (เช่นหัก balance + สร้าง order + log trade)
+
+// ใช้ทรัพยากรน้อยกว่า microservices
+
+// ข้อเสีย
+
+// โตแล้ว deploy ช้าขึ้น, restart กระทบทุกฟีเจอร์
+
+// scale แบบแยกบางส่วนยาก
+
+// coupling ระหว่างโดเมนเพิ่มขึ้น
+
+
+// model User {
+//   id         Int       @id @default(autoincrement())
+//   email      String    @unique
+//   password   String
+//   name       String
+//   role       Role      @default(MEMBER)
+//   isDisabled Boolean   @default(false)
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+
+//   apiKeys    ApiKey[]
+//   balances   Balance[]
+//   orders     Order[]
+// }
+
+// model ApiKey {
+//   id        Int      @id @default(autoincrement())
+//   userId    Int
+//   keyId     String   @unique     
+//   keyHash   String               
+//   scopes    Json
+//   isActive  Boolean  @default(true)
+//   createdAt DateTime @default(now())
+
+//   user      User     @relation(fields: [userId], references: [id])
+
+//   @@index([userId])
+// }
+
+
+// model Balance {
+//   id        Int      @id @default(autoincrement())
+//   userId    Int
+//   asset     String
+//   free      Decimal  @db.Decimal(32,16) @default(0)
+//   locked    Decimal  @db.Decimal(32,16) @default(0)
+//   updatedAt DateTime @updatedAt
+
+//   user      User     @relation(fields: [userId], references: [id])
+
+//   @@unique([userId, asset])
+//   @@index([userId, asset])
+// }
+
+// model Order {
+//   id          Int          @id @default(autoincrement())
+//   userId      Int
+//   symbol      String
+//   side        Side
+//   type        OrderType
+//   price       Decimal?     @db.Decimal(32,16) 
+//   qty         Decimal      @db.Decimal(32,16)
+//   status      OrderStatus  @default(NEW)
+//   timeInForce TimeInForce? @default(GTC)
+//   createdAt   DateTime     @default(now())
+//   updatedAt   DateTime     @updatedAt
+
+//   user        User         @relation(fields: [userId], references: [id])
+//   trades      Trade[]
+
+//   @@index([userId, createdAt])
+//   @@index([symbol, createdAt])
+// }
+
+// model Trade {
+//   id         Int      @id @default(autoincrement())
+//   orderId    Int
+//   tradePrice Decimal  @db.Decimal(32,16)
+//   tradeQty   Decimal  @db.Decimal(32,16)
+//   feeAsset   String?
+//   fee        Decimal? @db.Decimal(32,16)
+//   createdAt  DateTime @default(now())
+
+//   order      Order    @relation(fields: [orderId], references: [id])
+
+//   @@index([orderId])
+// }
+
+
+// model PriceSnapshot {
+//   id        Int         @id @default(autoincrement())
+//   symbol    String      @unique     
+//   price     Decimal     @db.Decimal(20, 8)
+//   bid       Decimal?    @db.Decimal(20, 8)
+//   ask       Decimal?    @db.Decimal(20, 8)
+//   volume    Decimal?    @db.Decimal(28, 8)
+//   source    PriceSource
+//   eventTime DateTime    @default(now())
+// }
+
+// model CurrentPrice {
+//   symbol    String    @id
+//   price     Decimal   @db.Decimal(20, 8)
+//   bid       Decimal?  @db.Decimal(20, 8)
+//   ask       Decimal?  @db.Decimal(20, 8)
+//   volume    Decimal?  @db.Decimal(28, 8)
+//   eventTime DateTime
+//   updatedAt DateTime  @updatedAt
+// }
